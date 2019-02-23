@@ -1,5 +1,21 @@
 apply plugin: 'kotlin-multiplatform'
 
+buildscript {
+    ext.ktor_version = '1.1.3'
+
+    repositories {
+        mavenLocal()
+        jcenter()
+    }
+}
+
+repositories {
+    maven { url "https://dl.bintray.com/kotlin/kotlinx" }
+    maven { url "https://dl.bintray.com/kotlin/ktor" }
+    google()
+    jcenter()
+}
+
 kotlin {
     targets {
         final def iOSTarget = System.getenv('SDK_NAME')?.startsWith("iphoneos") \
@@ -22,7 +38,15 @@ kotlin {
         androidMain.dependencies {
             api 'org.jetbrains.kotlin:kotlin-stdlib'
         }
+
+        iosMain
     }
+}
+
+dependencies {
+    commonMainImplementation "io.ktor:ktor-client-core:$ktor_version"
+    androidMainImplementation "io.ktor:ktor-client-android:$ktor_version"
+    iosMainImplementation "io.ktor:ktor-client-ios:$ktor_version"
 }
 
 task packForXCode(type: Sync) {
